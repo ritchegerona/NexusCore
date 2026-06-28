@@ -215,3 +215,17 @@ fn handle_interactive() {
         _ => unreachable!(),
     }
 }
+
+// Add to Commands enum:
+// Dashboard,
+
+// Add to match:
+// Some(Commands::Dashboard) => {
+//     let rt = tokio::runtime::Runtime::new().unwrap();
+//     rt.block_on(async {
+//         if let Err(e) = dashboard::run_dashboard("127.0.0.1", 3000).await {
+//             tracing::error!("Dashboard failed: {}", e);
+//             std::process::exit(1);
+//         }
+//     });
+// }

@@ -1,0 +1,11 @@
+[package]
+name = "dashboard-server"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+dashboard = { path = "../../crates/dashboard" }
+common = { path = "../../crates/common" }
+logger = { path = "../../crates/logger" }
+tokio = { version = "1.35", features = ["full"] }
+tracing = "0.1"

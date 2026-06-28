@@ -7,7 +7,10 @@ members = [
     "crates/filesystem",
     "crates/workspace", "apps/nexus-cli",
     "apps/nexus-cli", "crates/async-runtime",
-    "crates/async-runtime",
+    "crates/async-runtime", "crates/dashboard",
+    "crates/dashboard", "apps/dashboard-server",
+    "apps/dashboard-server", "crates/llm",
+    "crates/llm",
 ]
 
 [workspace.package]

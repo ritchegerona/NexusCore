@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusCore Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-blue-400">🚀 NexusCore Dashboard</h1>
+            <p class="text-gray-400 mt-2">Modular Rust Workspace Framework</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Status</p>
+                        <p class="text-2xl font-bold text-green-400">Running</p>
+                    </div>
+                    <i data-lucide="activity" class="w-8 h-8 text-green-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Crates</p>
+                        <p class="text-2xl font-bold text-blue-400">6</p>
+                    </div>
+                    <i data-lucide="package" class="w-8 h-8 text-blue-400"></i>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Version</p>
+                        <p class="text-2xl font-bold text-purple-400">0.1.0</p>
+                    </div>
+                    <i data-lucide="tag" class="w-8 h-8 text-purple-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+                <div class="space-y-2">
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-left">
+                        📦 Build Workspace
+                    </button>
+                    <button class="w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-left">
+                        🧪 Run Tests
+                    </button>
+                    <button class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-left">
+                        📊 View Documentation
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <h2 class="text-xl font-bold mb-4">System Info</h2>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Rust Edition:</span>
+                        <span>2021</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Workspace:</span>
+                        <span>Active</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Async Runtime:</span>
+                        <span>Tokio</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
