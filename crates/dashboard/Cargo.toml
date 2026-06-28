@@ -9,7 +9,7 @@ config = { path = "../config" }
 logger = { path = "../logger" }
 workspace = { path = "../workspace" }
 llm = { path = "../llm" }
-axum = "0.7"
+axum = { version = "0.7", features = ["ws"] }
 tokio = { version = "1.35", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
@@ -17,3 +17,6 @@ tracing = "0.1"
 tower = "0.4"
 tower-http = { version = "0.5", features = ["fs", "cors"] }
 chrono = "0.4"
+tokio-stream = "0.1"
+futures = "0.3"
+agents = { path = "../agents" }

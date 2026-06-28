@@ -6,84 +6,48 @@
     <title>NexusCore Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.8/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        #chat-history { overflow-y: auto !important; max-height: calc(100vh - 280px); scrollbar-gutter: stable; }
+        .code-block { font-family: 'JetBrains Mono', monospace; background: #0f172a; border-left: 3px solid #3b82f6; white-space: pre-wrap; word-break: break-word; }
+        .chat-message pre { background: #0f172a; border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 0.5rem 0; border: 1px solid #1e293b; }
+        .chat-message code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #e2e8f0; }
+        .chat-message p { margin-bottom: 0.75rem; line-height: 1.7; }
+        .glass-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(148, 163, 184, 0.08); }
+        .agent-btn.active { background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.5); }
+        .auto-badge { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+    </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold text-blue-400">🚀 NexusCore Dashboard</h1>
-            <p class="text-gray-400 mt-2">Modular Rust Workspace Framework</p>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Status</p>
-                        <p class="text-2xl font-bold text-green-400">Running</p>
-                    </div>
-                    <i data-lucide="activity" class="w-8 h-8 text-green-400"></i>
-                </div>
+<body class="bg-slate-950 text-slate-200 h-screen flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="border-b border-slate-800/80 px-6 py-3 flex-shrink-0 bg-slate-950/80 backdrop-blur-md z-20">
+        <div class="flex items-center justify-between max-w-[1920px] mx-auto">
+            <div class="flex items-center gap-3">
+                <img src="/static/assets/logo.png" alt="NexusCore" class="w-9 h-9">
+                <div><h1 class="text-lg font-semibold text-white tracking-tight leading-none">NexusCore</h1><p class="text-[10px] text-slate-500 font-medium tracking-[0.2em] uppercase mt-0.5">Agents · Connect · Create</p></div>
             </div>
-
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Crates</p>
-                        <p class="text-2xl font-bold text-blue-400">6</p>
-                    </div>
-                    <i data-lucide="package" class="w-8 h-8 text-blue-400"></i>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Version</p>
-                        <p class="text-2xl font-bold text-purple-400">0.1.0</p>
-                    </div>
-                    <i data-lucide="tag" class="w-8 h-8 text-purple-400"></i>
-                </div>
+            <div class="flex items-center gap-3">
+                <span id="routing-indicator" class="hidden flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-400 text-[11px] font-medium border border-blue-500/20 auto-badge">
+                    <i data-lucide="sparkles" class="w-3 h-3"></i>Auto-Routed
+                </span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[11px] font-medium border border-emerald-500/20"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>Online</span>
+                <span class="text-[11px] text-slate-600 font-mono">v0.1.0</span>
             </div>
         </div>
+    </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
-                <div class="space-y-2">
-                    <button class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-left">
-                        📦 Build Workspace
-                    </button>
-                    <button class="w-full bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-left">
-                        🧪 Run Tests
-                    </button>
-                    <button class="w-full bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-left">
-                        📊 View Documentation
-                    </button>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                <h2 class="text-xl font-bold mb-4">System Info</h2>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">Rust Edition:</span>
-                        <span>2021</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">Workspace:</span>
-                        <span>Active</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-400">Async Runtime:</span>
-                        <span>Tokio</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        lucide.createIcons();
-    </script>
-</body>
-</html>
+    <!-- Main Layout -->
+    <main class="flex-1 flex max-w-[1920px] mx-auto w-full p-4 gap-4 min-h-0 overflow-hidden">
+        <!-- Left Panel -->
+        <section class="w-[400px] flex-shrink-0 flex flex-col gap-4 overflow-y-auto pr-1">
+            <div class="grid grid-cols-3 gap-3">
+                <div class="glass-panel rounded-xl p-4 text-center"><p class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Crates</p><p class="text-xl font-bold text-white">7</p></div>
+                <div class="glass-panel rounded-xl p-4 text-center"><p class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Tests</p><p class="text-xl font-bold text-emerald-400">11</p></div>
+                <div class="glass-panel rounded-xl p-4 text-center"><p class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">

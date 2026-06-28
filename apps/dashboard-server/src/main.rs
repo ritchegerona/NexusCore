@@ -3,8 +3,13 @@ use logger::init_logger;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+use dotenv::dotenv;
+
 #[tokio::main]
 async fn main() {
+    // Load environment variables from .env file
+    dotenv().ok();
+    
     // Initialize logger
     if let Err(e) = init_logger("info") {
         eprintln!("Failed to initialize logger: {}", e);
@@ -12,15 +17,11 @@ async fn main() {
     }
 
     tracing::info!("Starting NexusCore Dashboard Server...");
-
-    // Create application state
-    let state = Arc::new(Mutex::new(AppState {
-        workspace_path: ".".to_string(),
-    }));
-
-    // Run dashboard on port 3000
-    if let Err(e) = run_dashboard("127.0.0.1", 3000).await {
-        tracing::error!("Dashboard failed: {}", e);
-        std::process::exit(1);
+    
+    // Verify keys are loaded (optional debug check)
+    if std::env::var("OPENAI_API_KEY").is_err() {
+        tracing::warn!("OPENAI_API_KEY not set in environment");
     }
+    
+    // ... rest of your code
 }

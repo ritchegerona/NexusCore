@@ -5,12 +5,13 @@ members = [
     "crates/config",
     "crates/logger",
     "crates/filesystem",
-    "crates/workspace", "apps/nexus-cli",
-    "apps/nexus-cli", "crates/async-runtime",
-    "crates/async-runtime", "crates/dashboard",
-    "crates/dashboard", "apps/dashboard-server",
-    "apps/dashboard-server", "crates/llm",
+    "crates/workspace",
+    "crates/async-runtime",
     "crates/llm",
+    "crates/dashboard",
+    "apps/nexus-cli",
+    "apps/dashboard-server", "crates/agents",
+    "crates/agents",
 ]
 
 [workspace.package]
@@ -18,6 +19,3 @@ version = "0.1.0"
 edition = "2021"
 authors = ["NexusCore Team"]
 license = "MIT"
-
-[workspace.dependencies]
-# Ilagay dito ang mga shared dependencies sa Phase 2

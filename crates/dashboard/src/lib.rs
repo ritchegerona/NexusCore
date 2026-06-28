@@ -1,7 +1,7 @@
 pub mod handlers;
 
 use axum::{
-    routing::get,
+    routing::{get, post},
     Router,
 };
 use std::sync::Arc;
@@ -15,7 +15,15 @@ pub fn create_router(state: Arc<Mutex<AppState>>) -> Router {
         .route("/", get(handlers::root))
         .route("/api/dashboard", get(handlers::api_dashboard))
         .route("/api/health", get(handlers::api_health))
-        .nest_service("/static", ServeDir::new("crates/dashboard/static"))
+        .route("/api/build", get(handlers::build_workspace))
+        .route("/api/test", get(handlers::run_tests))
+        .route("/api/chat", post(handlers::chat))
+        .route("/api/docs", get(handlers::open_docs))
+        .route("/api/logs/ws", get(handlers::logs_websocket))
+        .route("/api/agents", get(handlers::list_agents))
+        .route("/api/agents/chat", post(handlers::agent_chat))
+        .route("/api/auto-route", post(handlers::auto_route))
+        .nest_service("/static", ServeDir::new("./crates/dashboard/static"))
         .with_state(state)
 }
 

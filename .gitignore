@@ -27,3 +27,4 @@ test_*.toml
 test_dir/
 test_workspace/
 test_ws_save/
+.env
