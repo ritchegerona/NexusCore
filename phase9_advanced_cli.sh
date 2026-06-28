@@ -1,0 +1,264 @@
+#!/usr/bin/env bash
+set -e
+
+echo "🚀 Initializing Phase 9: Advanced CLI Features..."
+
+# 1. Update nexus-cli dependencies to include clap
+echo "🔧 Updating nexus-cli dependencies..."
+cat > apps/nexus-cli/Cargo.toml <<EOF
+[package]
+name = "nexus-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+common = { path = "../../crates/common" }
+config = { path = "../../crates/config" }
+logger = { path = "../../crates/logger" }
+filesystem = { path = "../../crates/filesystem" }
+workspace = { path = "../../crates/workspace" }
+tracing = "0.1"
+clap = { version = "4.4", features = ["derive"] }
+dialoguer = "0.11"
+console = "0.15"
+EOF
+
+# 2. Create advanced CLI with subcommands
+cat > apps/nexus-cli/src/main.rs <<EOF
+use clap::{Parser, Subcommand};
+use config::settings::NexusConfig;
+use logger::init_logger;
+use workspace::Workspace;
+use dialoguer::{theme::ColorfulTheme, Select, Input};
+use console::style;
+
+#[derive(Parser)]
+#[command(name = "nexus-cli")]
+#[command(about = "NexusCore CLI - A modular Rust workspace framework", long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Initialize a new workspace
+    Init {
+        /// Name of the workspace
+        #[arg(short, long)]
+        name: Option<String>,
+        
+        /// Path where to create the workspace
+        #[arg(short, long, default_value = ".")]
+        path: String,
+    },
+    
+    /// Build the workspace
+    Build {
+        /// Build in release mode
+        #[arg(short, long)]
+        release: bool,
+    },
+    
+    /// Run tests
+    Test {
+        /// Run tests with verbose output
+        #[arg(short, long)]
+        verbose: bool,
+    },
+    
+    /// Show workspace information
+    Info,
+    
+    /// Interactive mode
+    Interactive,
+}
+
+fn main() {
+    // Initialize logger
+    if let Err(e) = init_logger("info") {
+        eprintln!("Failed to initialize logger: {}", e);
+        std::process::exit(1);
+    }
+
+    let cli = Cli::parse();
+
+    match cli.command {
+        Some(Commands::Init { name, path }) => {
+            handle_init(name, path);
+        }
+        Some(Commands::Build { release }) => {
+            handle_build(release);
+        }
+        Some(Commands::Test { verbose }) => {
+            handle_test(verbose);
+        }
+        Some(Commands::Info) => {
+            handle_info();
+        }
+        Some(Commands::Interactive) => {
+            handle_interactive();
+        }
+        None => {
+            // Default behavior when no command is provided
+            tracing::info!("Welcome to NexusCore CLI!");
+            println!("Run {} for usage information.", style("nexus-cli --help").cyan());
+        }
+    }
+}
+
+fn handle_init(name: Option<String>, path: String) {
+    let workspace_name = name.unwrap_or_else(|| {
+        Input::with_theme(&ColorfulTheme::default())
+            .with_prompt("Workspace name")
+            .default("my-workspace".into())
+            .interact_text()
+            .unwrap()
+    });
+
+    tracing::info!("Initializing workspace '{}' at '{}'...", workspace_name, path);
+    
+    match Workspace::new(&workspace_name, &path) {
+        Ok(ws) => {
+            let config_path = format!("{}/workspace.json", path);
+            if let Err(e) = ws.save(&config_path) {
+                tracing::error!("Failed to save workspace config: {}", e);
+                std::process::exit(1);
+            }
+            
+            println!("{}", style("✓ Workspace created successfully!").green());
+            println!("  Name: {}", ws.name);
+            println!("  Path: {}", ws.path.display());
+        }
+        Err(e) => {
+            tracing::error!("Failed to create workspace: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn handle_build(release: bool) {
+    let mode = if release { "release" } else { "debug" };
+    tracing::info!("Building workspace in {} mode...", mode);
+    
+    let status = if release {
+        std::process::Command::new("cargo")
+            .args(["build", "--release", "--workspace"])
+            .status()
+    } else {
+        std::process::Command::new("cargo")
+            .args(["build", "--workspace"])
+            .status()
+    };
+
+    match status {
+        Ok(s) if s.success() => {
+            println!("{}", style("✓ Build completed successfully!").green());
+        }
+        Ok(s) => {
+            tracing::error!("Build failed with status: {}", s);
+            std::process::exit(1);
+        }
+        Err(e) => {
+            tracing::error!("Failed to execute build: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn handle_test(verbose: bool) {
+    tracing::info!("Running tests...");
+    
+    let mut cmd = std::process::Command::new("cargo");
+    cmd.args(["test", "--workspace"]);
+    
+    if verbose {
+        cmd.arg("--verbose");
+    }
+
+    match cmd.status() {
+        Ok(s) if s.success() => {
+            println!("{}", style("✓ All tests passed!").green());
+        }
+        Ok(s) => {
+            tracing::error!("Tests failed with status: {}", s);
+            std::process::exit(1);
+        }
+        Err(e) => {
+            tracing::error!("Failed to execute tests: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+
+fn handle_info() {
+    println!("{}", style("NexusCore Workspace Information").cyan().bold());
+    println!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    
+    // Load config if exists
+    match config::load_config("nexus.toml") {
+        Ok(cfg) => {
+            println!("Application: {}", cfg.app_name);
+            println!("Log Level:   {}", cfg.log_level);
+            println!("Max Workers: {:?}", cfg.max_workers.unwrap_or(4));
+        }
+        Err(_) => {
+            println!("Configuration: Not found (using defaults)");
+        }
+    }
+    
+    println!("\nCrates:");
+    println!("  • common     - Shared types and utilities");
+    println!("  • config     - Configuration management");
+    println!("  • logger     - Structured logging");
+    println!("  • filesystem - File operations");
+    println!("  • workspace  - Workspace management");
+}
+
+fn handle_interactive() {
+    println!("{}", style("NexusCore Interactive Mode").cyan().bold());
+    println!("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+    
+    let options = vec!["Initialize workspace", "Build project", "Run tests", "Show info", "Exit"];
+    
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("What would you like to do?")
+        .items(&options)
+        .default(0)
+        .interact()
+        .unwrap();
+
+    match selection {
+        0 => handle_init(None, ".".to_string()),
+        1 => handle_build(false),
+        2 => handle_test(false),
+        3 => handle_info(),
+        4 => {
+            println!("{}", style("Goodbye!").green());
+            std::process::exit(0);
+        }
+        _ => unreachable!(),
+    }
+}
+EOF
+
+# 3. Build and test the new CLI
+echo "🏃 Building advanced CLI..."
+cargo build -p nexus-cli
+
+echo ""
+echo "========================================="
+echo " ✅ Phase 9 Complete!"
+echo "========================================="
+echo " Advanced CLI features added!"
+echo ""
+echo " 📋 Available commands:"
+echo "   nexus-cli init --name <name> --path <path>"
+echo "   nexus-cli build [--release]"
+echo "   nexus-cli test [--verbose]"
+echo "   nexus-cli info"
+echo "   nexus-cli interactive"
+echo ""
+echo " Try it now:"
+echo "   cargo run -p nexus-cli -- --help"
+echo "   cargo run -p nexus-cli -- interactive"

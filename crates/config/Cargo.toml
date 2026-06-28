@@ -2,7 +2,8 @@
 name = "config"
 version.workspace = true
 edition.workspace = true
-authors.workspace = true
-license.workspace = true
 
 [dependencies]
+common = { path = "../common" }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"

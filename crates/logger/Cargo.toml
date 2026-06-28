@@ -2,7 +2,8 @@
 name = "logger"
 version.workspace = true
 edition.workspace = true
-authors.workspace = true
-license.workspace = true
 
 [dependencies]
+common = { path = "../common" }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -1,0 +1,19 @@
+[package]
+name = "nexus-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+common = { path = "../../crates/common" }
+config = { path = "../../crates/config" }
+logger = { path = "../../crates/logger" }
+filesystem = { path = "../../crates/filesystem" }
+workspace = { path = "../../crates/workspace" }
+async-runtime = { path = "../../crates/async-runtime" }
+tracing = "0.1"
+clap = { version = "4.4", features = ["derive"] }
+dialoguer = "0.11"
+console = "0.15"
+tokio = { version = "1.35", features = ["full"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"

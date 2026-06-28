@@ -2,7 +2,7 @@
 name = "filesystem"
 version.workspace = true
 edition.workspace = true
-authors.workspace = true
-license.workspace = true
 
 [dependencies]
+common = { path = "../common" }
+tracing = "0.1"

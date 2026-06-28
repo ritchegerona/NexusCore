@@ -5,7 +5,9 @@ members = [
     "crates/config",
     "crates/logger",
     "crates/filesystem",
-    "crates/workspace",
+    "crates/workspace", "apps/nexus-cli",
+    "apps/nexus-cli", "crates/async-runtime",
+    "crates/async-runtime",
 ]
 
 [workspace.package]

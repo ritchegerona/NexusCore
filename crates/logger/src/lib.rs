@@ -1,14 +1,12 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+use common::{NexusError, NexusResult};
+use tracing_subscriber::{fmt, EnvFilter};
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub fn init_logger(log_level: &str) -> NexusResult<()> {
+    let filter = EnvFilter::try_new(log_level)
+        .map_err(|e| NexusError::Config(format!("Invalid log level '{}': {}", log_level, e)))?;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    fmt().with_env_filter(filter).with_target(false).init();
+
+    tracing::info!("Logger initialized successfully.");
+    Ok(())
 }

@@ -4,3 +4,26 @@ target/
 .logs/
 .idea/
 .vscode/settings.json
+
+# Build artifacts
+/target/
+**/*.rs.bk
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Demo/test artifacts
+/demo-workspace/
+test_*.txt
+test_*.toml
+test_dir/
+test_workspace/
+test_ws_save/
