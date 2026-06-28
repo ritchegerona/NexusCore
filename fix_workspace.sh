@@ -44,7 +44,7 @@ echo "📦 Creating Rust library crates..."
 mkdir -p crates
 for crate in "${CRATES[@]}"; do
     echo "  -> Creating crates/$crate"
-    cargo new --lib "crates/$crate" > /dev/null
+    cargo new --lib --vcs none "crates/$crate" > /dev/null
 done
 
 # 5. I-verify kung nag-build nang tama
