@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "crates/common",
+    "crates/config",
+    "crates/logger",
+    "crates/filesystem",
+    "crates/workspace",
+]
+
+[workspace.package]
+edition="2024"
+license="MIT"
+version="0.1.0"
+authors=["NexusCore Initiative"]

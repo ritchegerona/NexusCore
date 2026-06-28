@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/common",
+    "crates/config",
+    "crates/logger",
+    "crates/filesystem",
+    "crates/workspace",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["NexusCore Team"]
+license = "MIT"
+
+[workspace.dependencies]
+# Ilagay dito ang mga shared dependencies sa Phase 2
