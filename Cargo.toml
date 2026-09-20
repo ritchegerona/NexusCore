@@ -10,7 +10,7 @@ members = [
     "crates/llm",
     "crates/dashboard",
     "apps/nexus-cli",
-    "apps/dashboard-server", "crates/agents",
+    "apps/dashboard-server",
     "crates/agents",
 ]
 
