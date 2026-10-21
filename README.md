@@ -59,7 +59,6 @@ NexusCore/
 │   ├── nexus-cli/       # CLI application
 │   └── dashboard-server/ # Web dashboard
 ├── docs/                # Documentation
-├── bootstrap/           # Setup scripts
 └── scripts/             # Utility scripts
 ```
 
