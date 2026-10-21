@@ -22,6 +22,7 @@ Thumbs.db
 
 # Demo/test artifacts
 /demo-workspace/
+/my-project/
 test_*.txt
 test_*.toml
 test_dir/

@@ -96,19 +96,13 @@ cargo doc --open --workspace
 
 ## Configuration
 
-Create a `nexus.toml` file in your project root:
+Create a `nexus.toml` file in your project root. The schema matches the
+`NexusConfig` struct in `crates/config`:
 
 ```toml
-[app]
-name = "MyApp"
-version = "0.1.0"
-
-[logging]
-level = "info"
-format = "json"
-
-[database]
-path = "./data/app.db"
+app_name = "MyApp"
+log_level = "info"      # trace | debug | info | warn | error
+max_workers = 8         # optional; defaults to 4
 ```
 
 ## Roadmap
